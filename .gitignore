@@ -1,0 +1,14 @@
+# Node modules
+node_modules
+
+# Dist
+dist
+
+# Logs
+*.log
+
+# CSV
+*.csv
+
+# Environment variables
+.env
