@@ -9,6 +9,7 @@ A flexible, extensible web scraping framework built with TypeScript and Node.js 
 - 🚀 **Performance Optimized**: Includes caching mechanisms to avoid redundant requests
 - 💾 **Multiple Storage Options**: Export data to JSON, CSV, or extend to databases
 - 🔧 **Customizable Extractors**: Create specialized extractors for different content types
+- 🖥️ **CLI Support**: Run scraper with custom URLs via command line
 
 ## Installation
 
@@ -26,6 +27,18 @@ npm run build
 
 ## Quick Start
 
+### Using the Scraper from Command Line
+
+```bash
+# Run with a specific URL
+ts-node example.ts https://example.com/article/123
+
+# Run with default URL if none is provided
+ts-node example.ts
+```
+
+### Code Example
+
 ```typescript
 import {
   Scraper,
@@ -37,18 +50,23 @@ import {
 } from "./src";
 
 async function main() {
+  // Get URL from command-line arguments or use default
+  const url = process.argv[2] || "https://example.com/article/123";
+  const outputDir = "./results";
+
   // Create components
   const fetcher = new CachedFetcher(new HttpFetcher());
   const parser = new CheerioParser();
   const extractor = new NewsExtractor();
-  const storage = new JsonStorage("./results");
+  const storage = new JsonStorage(outputDir);
 
   // Create scraper
   const scraper = new Scraper(fetcher, parser, extractor, storage);
 
   // Execute scrape
   try {
-    const result = await scraper.scrape("https://example.com/article/123");
+    console.log(`Starting to scrape data from ${url}...`);
+    const result = await scraper.scrape(url);
     console.log("Scraping complete:", result.data);
   } catch (error) {
     console.error("Scraping failed:", error);
